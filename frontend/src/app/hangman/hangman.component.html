@@ -1,0 +1,79 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Voice Recognition Hangman</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <form #guessForm= "ngForm" (ngSubmit)="onSubmit(guessForm)">
+        <div class="row">
+          <div class="col-xs-12">
+            <div>
+              <label class="radio-inline">
+                <input type="radio" name="option" value="text" checked="checked" [(ngModel)]="option">
+                Text
+              </label>
+          </div>
+            <div>
+              <label class="radio-inline">
+                <input type="radio" name="option" value="speech" [(ngModel)]="option">
+                Speech
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="option === 'text'">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="guess">Guess</label>
+              <input
+                type="text"
+                name="guess"
+                id="guess"
+                ngModel
+                required>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="option === 'speech'">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="speech">Guess</label>
+              <input
+                type="text"
+                name="speech"
+                id="speech"
+                ngModel
+                disabled>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="option === 'text'">
+          <div class="col-xs-12">
+            <button
+              type="submit"
+              class="btn btn-success"
+              [disabled]="!guessForm.valid"
+              >Submit</button>
+          </div>
+        </div>
+      </form>
+      <div class="row" *ngIf="option === 'speech'">
+        <div class="col-xs-12" *ngIf="!recording">
+          <button
+            class="btn btn-success"
+            (click)="onRecord()"
+          >Record</button>
+        </div>
+        <div class="col-xs-12" *ngIf="recording">
+          <button
+            class="btn btn-success"
+            (click)="onStopRecord()"
+          >Stop Recording</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
