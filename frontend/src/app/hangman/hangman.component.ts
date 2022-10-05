@@ -63,7 +63,7 @@ export class HangmanComponent implements OnInit {
     console.log("recorder stopped");
 
     this.mediaRecorder.onstop = (e: any) => {
-      console.log("Still stopped");
+      console.log("Creating Audio File");
       const blob = new Blob(this.chunks, { type: "audio/ogg; codecs=opus" });
       this.chunks = [];
       const audioURL = URL.createObjectURL(blob);
