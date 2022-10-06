@@ -2,7 +2,11 @@ from django.shortcuts import render
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from hangman.api.serializers import UserSerializer, GroupSerializer
+
+from google.cloud import speech
 
 # Create your views here.
 
@@ -22,3 +26,29 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+@api_view(['GET', 'POST'])
+def transcribe(request):
+
+    # Instantiates a client
+    client = speech.SpeechClient()
+
+    # The name of the audio file to transcribe
+    gcs_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.raw"
+
+    audio = speech.RecognitionAudio(uri=gcs_uri)
+
+    config = speech.RecognitionConfig(
+        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=16000,
+        language_code="en-US",
+    )
+
+    # Detects speech in the audio file
+    response = client.recognize(config=config, audio=audio)
+
+    for result in response.results:
+        print("Transcript: {}".format(result.alternatives[0].transcript))
+
+    json_response = {"ok": True}
+    return Response(json_response)

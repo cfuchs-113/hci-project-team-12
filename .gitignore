@@ -127,3 +127,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+/voice-rec-hangman/hangman/hangman/speech-to-text-key.json
