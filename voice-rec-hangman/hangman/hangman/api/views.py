@@ -6,6 +6,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from hangman.api.serializers import UserSerializer, GroupSerializer
 
+import json
+
 from google.cloud import speech
 
 # Create your views here.
@@ -38,7 +40,9 @@ def transcribe(request):
 
     audio = speech.RecognitionAudio(uri=gcs_uri) """
 
-    gcs_content =
+    data = json.load(request)
+
+    gcs_content = data['audioData']
     audio = speech.RecognitionAudio(content=gcs_content)
 
     config = speech.RecognitionConfig(
@@ -50,8 +54,9 @@ def transcribe(request):
     # Detects speech in the audio file
     response = client.recognize(config=config, audio=audio)
 
-    for result in response.results:
-        print("Transcript: {}".format(result.alternatives[0].transcript))
+    print(format(response.results[0].alternatives[0].transcript))
 
-    json_response = {"ok": True}
+    guess = format(response.results[0].alternatives[0].transcript)
+
+    json_response = {"guess": guess}
     return Response(json_response)

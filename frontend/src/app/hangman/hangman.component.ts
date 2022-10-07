@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
+import {HangmanService, TranscriptionResponseData} from "./hangman.service";
+import {Observable} from "rxjs";
+
 @Component({
   selector: 'app-hangman',
   templateUrl: './hangman.component.html',
@@ -11,7 +14,7 @@ export class HangmanComponent implements OnInit {
   chunks: any;
   recording: boolean;
   option: any;
-  constructor() {
+  constructor(private hangmanService: HangmanService ) {
     this.recording=false;
     this.mediaRecorder = null;
     this.chunks = [];
@@ -66,17 +69,20 @@ export class HangmanComponent implements OnInit {
       console.log("Creating Audio File");
       const blob = new Blob(this.chunks, { type: "audio/ogg; codecs=opus" });
       this.chunks = [];
-      const audioURL = URL.createObjectURL(blob);
-      let link = document.createElement("a");
-      link.href = audioURL;
-      link.download = "test.ogg";
-      link.innerHTML = "Click here";
-      document.body.appendChild(link);
-      let idCardBase64 = '';
-      this.getBase64(blob, (result) => {
-        idCardBase64 = result;
-        console.log(idCardBase64);
+      this.getBase64(blob,(result) => {
+        let audioData = result;
+        let hangmanObs: Observable<TranscriptionResponseData>;
+        hangmanObs = this.hangmanService.transcribe(audioData);
+        hangmanObs.subscribe({
+          next: resData => {
+            console.log(resData)
+          },
+          error: error => {
+            console.log (error);
+          }
+        })
       });
+
     };
   }
 
