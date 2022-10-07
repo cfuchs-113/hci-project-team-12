@@ -62,7 +62,7 @@ export class HangmanComponent implements OnInit {
     console.log(this.mediaRecorder.state);
     console.log("recorder stopped");
 
-    this.mediaRecorder.onstop = (e: any) => {
+    this.mediaRecorder.onstop = () => {
       console.log("Creating Audio File");
       const blob = new Blob(this.chunks, { type: "audio/ogg; codecs=opus" });
       this.chunks = [];
@@ -72,7 +72,25 @@ export class HangmanComponent implements OnInit {
       link.download = "test.ogg";
       link.innerHTML = "Click here";
       document.body.appendChild(link);
+      let idCardBase64 = '';
+      this.getBase64(blob, (result) => {
+        idCardBase64 = result;
+        console.log(idCardBase64);
+      });
     };
   }
+
+  getBase64(file: Blob, cb: { (result: any): void; (arg0: string | ArrayBuffer | null): void; }) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+
+      // @ts-ignore
+      cb(reader.result.split(',')[1]);
+    };
+    reader.onerror = function (error) {
+      console.log('Error: ', error);
+    };
+  };
 
 }

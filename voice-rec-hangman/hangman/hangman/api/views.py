@@ -34,13 +34,16 @@ def transcribe(request):
     client = speech.SpeechClient()
 
     # The name of the audio file to transcribe
-    gcs_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.raw"
+    """ gcs_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.raw"
 
-    audio = speech.RecognitionAudio(uri=gcs_uri)
+    audio = speech.RecognitionAudio(uri=gcs_uri) """
+
+    gcs_content =
+    audio = speech.RecognitionAudio(content=gcs_content)
 
     config = speech.RecognitionConfig(
-        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=16000,
+        encoding=speech.RecognitionConfig.AudioEncoding.OGG_OPUS,
+        sample_rate_hertz=48000,
         language_code="en-US",
     )
 
