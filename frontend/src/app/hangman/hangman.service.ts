@@ -26,6 +26,10 @@ export class HangmanService  {
       );
   }
 
+  handleGuess(guess: string) {
+    // TODO
+  }
+
   private handleError(errorRes: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';
     return throwError(() => errorMessage);

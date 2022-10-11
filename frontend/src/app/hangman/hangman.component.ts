@@ -1,23 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
-import {HangmanService, TranscriptionResponseData} from "./hangman.service";
-import {Observable} from "rxjs";
+import { HangmanService, TranscriptionResponseData } from "./hangman.service";
+import { Observable } from "rxjs";
 
 @Component({
   selector: 'app-hangman',
   templateUrl: './hangman.component.html',
-  styleUrls: ['./hangman.component.scss']
+  styleUrls: ['./hangman.component.scss'],
 })
 export class HangmanComponent implements OnInit {
   mediaRecorder: any;
   chunks: any;
   recording: boolean;
   option: any;
-  constructor(private hangmanService: HangmanService ) {
+  checkbox: any;
+  speechGuess: string;
+  textGuess: string;
+  verify: boolean;
+
+  constructor( private hangmanService: HangmanService, private cdr: ChangeDetectorRef ) {
     this.recording=false;
     this.mediaRecorder = null;
     this.chunks = [];
+    this.checkbox = false;
+    this.speechGuess = '';
+    this.textGuess = '';
+    this.verify = false;
   }
 
   ngOnInit() {
@@ -25,7 +34,8 @@ export class HangmanComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    console.log(form.value.guess);
+    this.formatGuess(form.value.guess, this.checkbox, false);
+    this.hangmanService.handleGuess(this.textGuess);
   }
 
   onRecord() {
@@ -48,6 +58,7 @@ export class HangmanComponent implements OnInit {
             this.mediaRecorder.ondataavailable = (e: { data: any; }) => {
               this.chunks.push(e.data);
             }
+            this.cdr.detectChanges();
           })
 
           .catch((err) => {
@@ -56,11 +67,11 @@ export class HangmanComponent implements OnInit {
       } else {
         console.log("getUserMedia not supported on your browser!");
       }
-
   }
 
   onStopRecord() {
     this.recording = false;
+    this.cdr.detectChanges();
     this.mediaRecorder.stop();
     console.log(this.mediaRecorder.state);
     console.log("recorder stopped");
@@ -75,15 +86,41 @@ export class HangmanComponent implements OnInit {
         hangmanObs = this.hangmanService.transcribe(audioData);
         hangmanObs.subscribe({
           next: resData => {
-            console.log(resData)
+            this.formatGuess(resData.guess, this.checkbox, true);
+            this.verify = true;
+            this.cdr.detectChanges();
           },
           error: error => {
             console.log (error);
           }
         })
       });
-
     };
+  }
+
+  onVerified() {
+    this.verify = false;
+    this.hangmanService.handleGuess(this.speechGuess);
+    this.cdr.detectChanges();
+  }
+
+  onWrong() {
+    this.speechGuess = '';
+    this.verify = false;
+    this.cdr.detectChanges();
+  }
+
+  private formatGuess(guess: string, guessAnswer: boolean, speech: boolean) {
+    if (!guessAnswer) {
+      guess = Array.from(guess)[0];
+    }
+    if (speech) {
+      this.speechGuess = guess;
+    } else {
+      this.textGuess = guess;
+      this.cdr.detectChanges();
+      console.log(this.textGuess);
+    }
   }
 
   getBase64(file: Blob, cb: { (result: any): void; (arg0: string | ArrayBuffer | null): void; }) {
