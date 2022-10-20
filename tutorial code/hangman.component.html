@@ -1,0 +1,99 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Voice Recognition Hangman</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <form #guessForm= "ngForm" (ngSubmit)="onSubmit(guessForm)">
+        <div class="row">
+          <div class="col-xs-12">
+              <label class="radio-inline">
+                <input type="radio" name="option" value="text" checked="checked" [(ngModel)]="option">
+                Text
+              </label>
+              <label class="radio-inline px-lg-2">
+                <input class="py-lg-2" type="radio" name="option" value="speech" [(ngModel)]="option">
+                Speech
+              </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <input
+              type="checkbox"
+              id="fullGuess"
+              name="fullGuessCheckbox"
+              [(ngModel)]="checkbox"
+            >
+            <label class="px-lg-2" for="fullGuess">Guess the full word?</label>
+          </div>
+        </div>
+        <div class="row py-lg-2" *ngIf="option === 'text'">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label class="px-lg-2" for="guess">Guess:</label>
+              <input
+                type="text"
+                name="guess"
+                id="guess"
+                value="{{textGuess}}"
+                ngModel
+                >
+            </div>
+          </div>
+        </div>
+        <div class="row py-lg-2" *ngIf="option === 'text'">
+          <div class="col-xs-12">
+            <button
+              type="submit"
+              class="btn btn-success"
+              [disabled]="!guessForm.valid"
+              >Submit</button>
+          </div>
+        </div>
+        <div class="row py-lg-2" *ngIf="option === 'speech'">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label class="px-lg-2" for="speech">Guess:</label>
+              <input
+                type="text"
+                name="speech"
+                id="speech"
+                value="{{speechGuess}}"
+                readonly
+              >
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="row py-lg-2" *ngIf="option === 'speech'">
+        <div class="col-xs-12" *ngIf="!recording &&  !verify">
+          <button
+            class="btn btn-success"
+            (click)="onRecord()"
+          >Record</button>
+        </div>
+        <div class="col-xs-12" *ngIf="recording  && !verify">
+          <button
+            class="btn btn-danger"
+            (click)="onStopRecord()"
+          >Stop Recording</button>
+        </div>
+        <div class="col-xs-12" *ngIf="verify">
+          <button
+            class="btn btn-success"
+            (click)="onVerified()"
+            >Correct!
+          </button>
+          <button
+            class="btn btn-danger"
+            (click)="onWrong()"
+          >Wrong!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
