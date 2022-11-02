@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.decorators import api_view
@@ -36,7 +35,7 @@ def transcribe(request):
     # Detects speech in the audio file
     response = client.recognize(config=config, audio=audio)
 
-    print(format(response.results[0].alternatives[0].transcript))
+    print(response);
 
     guess = format(response.results[0].alternatives[0].transcript)
 

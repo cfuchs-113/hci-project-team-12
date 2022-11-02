@@ -18,6 +18,11 @@ export class HangmanComponent implements OnInit {
   speechGuess: string;
   textGuess: string;
   verify: boolean;
+  word: string;
+  counter: number;
+  lives: number;
+  attempt: string;
+
 
   constructor( private hangmanService: HangmanService, private cdr: ChangeDetectorRef ) {
     this.recording=false;
@@ -27,6 +32,13 @@ export class HangmanComponent implements OnInit {
     this.speechGuess = '';
     this.textGuess = '';
     this.verify = false;
+    this.word = 'dog';
+    this.counter = 0;
+    this.lives = 10;
+    this.attempt = this.word;
+    for (let i = 0; i < this.word.length; i++) {
+      this.attempt = this.attempt.replace(this.word[i], '_');
+    }
   }
 
   ngOnInit() {
@@ -35,7 +47,7 @@ export class HangmanComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     this.formatGuess(form.value.guess, this.checkbox, false);
-    this.hangmanService.handleGuess(this.textGuess);
+    this.handleGuess(this.textGuess);
   }
 
   onRecord() {
@@ -100,7 +112,7 @@ export class HangmanComponent implements OnInit {
 
   onVerified() {
     this.verify = false;
-    this.hangmanService.handleGuess(this.speechGuess);
+    this.handleGuess(this.speechGuess);
     this.cdr.detectChanges();
   }
 
@@ -135,5 +147,35 @@ export class HangmanComponent implements OnInit {
       console.log('Error: ', error);
     };
   };
+
+  handleGuess(guess: string) {
+    if (guess.length === 1) {
+      for (let i = 0; i < this.word.length; i++) {
+        if (this.word[i] === guess) {
+          this.attempt = this.attempt.substring(0, i) + guess + this.attempt.substring(i + 1);
+        }
+      }
+      let j = this.word.indexOf(guess);
+      if (j === -1) {
+        this.lives -= 1;
+        console.log('incorrect');
+      } else {
+        console.log('correct');
+      }
+      if (this.attempt === this.word) {
+        console.log('winner');
+      }
+    } else {
+      if (guess === this.word) {
+        this.attempt = guess;
+        console.log('winner');
+      } else {
+        this.lives -= 1;
+        console.log('incorrect');
+      }
+    }
+  }
+
+
 
 }
