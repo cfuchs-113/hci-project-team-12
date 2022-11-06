@@ -4,7 +4,7 @@
       <h1>Voice Recognition Hangman</h1>
     </div>
   </div>
-  <div class="row">
+  <div class="row" *ngIf="!gameover">
     <div class="col-xs-12">
       <form #guessForm= "ngForm" (ngSubmit)="onSubmit(guessForm)">
         <div class="row">
@@ -38,6 +38,7 @@
                 type="text"
                 name="guess"
                 id="guess"
+                autocomplete=off
                 value="{{textGuess}}"
                 ngModel
                 >
@@ -96,10 +97,13 @@
     </div>
   </div>
   <div class="wrapper">
+    <h6 *ngIf=!gameover>{{lastGuess}}</h6>
+    <h4 *ngIf=winner>You won!</h4>
+    <h4 *ngIf=loser>You lost!</h4>
     <p>Lives: {{lives}}</p>
     <p>Word: {{attempt}}</p>
     <div class="container">
-      <button >Restart</button>
+      <button (click)="setupGame()" *ngIf=gameover>Play Again?</button>
     </div>
   </div>
 </div>

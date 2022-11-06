@@ -19,9 +19,13 @@ export class HangmanComponent implements OnInit {
   textGuess: string;
   verify: boolean;
   word: string;
-  counter: number;
   lives: number;
   attempt: string;
+  lastGuess: string;
+  winner: boolean;
+  loser: boolean;
+  gameover: boolean;
+  animals: [string, string, string, string, string, string, string, string, string, string];
 
 
   constructor( private hangmanService: HangmanService, private cdr: ChangeDetectorRef ) {
@@ -32,9 +36,24 @@ export class HangmanComponent implements OnInit {
     this.speechGuess = '';
     this.textGuess = '';
     this.verify = false;
-    this.word = 'dog';
-    this.counter = 0;
+    this.word = '';
+    this.attempt = '';
     this.lives = 10;
+    this.lastGuess = '';
+    this.winner = false;
+    this.loser = false;
+    this.gameover = false;
+    this.animals = ['dog', 'cat', 'fox', 'deer', 'elk', 'moose', 'racoon', 'chicken', 'horse', 'donkey'];
+    this.setupGame();
+  }
+
+  setupGame() {
+    this.lives = 10;
+    this.winner = false;
+    this.loser = false;
+    this.gameover = false;
+    this.lastGuess = '';
+    this.word = this.animals[Math.random() * this.animals.length | 0];
     this.attempt = this.word;
     for (let i = 0; i < this.word.length; i++) {
       this.attempt = this.attempt.replace(this.word[i], '_');
@@ -158,24 +177,29 @@ export class HangmanComponent implements OnInit {
       let j = this.word.indexOf(guess);
       if (j === -1) {
         this.lives -= 1;
-        console.log('incorrect');
+        this.lastGuess = 'Incorrect!';
       } else {
-        console.log('correct');
+        this.lastGuess = 'Correct!';
       }
       if (this.attempt === this.word) {
-        console.log('winner');
+        this.winner = true;
+        this.gameover = true;
       }
     } else {
       if (guess === this.word) {
         this.attempt = guess;
-        console.log('winner');
+        this.lastGuess = 'Correct!';
+        this.winner = true;
+        this.gameover = true;
       } else {
         this.lives -= 1;
-        console.log('incorrect');
+        this.lastGuess = "Incorrect!"
       }
     }
+    if (this.lives === 0) {
+      this.loser = true;
+      this.gameover = true;
+    }
   }
-
-
 
 }
