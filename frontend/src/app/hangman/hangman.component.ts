@@ -54,10 +54,16 @@ export class HangmanComponent implements OnInit {
     this.gameover = false;
     this.lastGuess = '';
     this.word = this.animals[Math.random() * this.animals.length | 0];
+    console.log(this.word);
     this.attempt = this.word;
     for (let i = 0; i < this.word.length; i++) {
       this.attempt = this.attempt.replace(this.word[i], '_');
     }
+  }
+
+  onPlayAgain() {
+    this.setupGame();
+    this.cdr.detectChanges();
   }
 
   ngOnInit() {
@@ -168,6 +174,7 @@ export class HangmanComponent implements OnInit {
   };
 
   handleGuess(guess: string) {
+    guess = guess.toLowerCase();
     if (guess.length === 1) {
       for (let i = 0; i < this.word.length; i++) {
         if (this.word[i] === guess) {
