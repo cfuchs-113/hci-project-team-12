@@ -6,11 +6,13 @@ import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms'
 import { HangmanComponent } from './hangman/hangman.component';
 import { HttpClientModule } from "@angular/common/http";
+import { MultiplayerComponent } from "./multiplayer/multiplayer.component";
 
 @NgModule({
   declarations: [
     AppComponent,
-    HangmanComponent
+    HangmanComponent,
+    MultiplayerComponent
   ],
   imports: [
     BrowserModule,
