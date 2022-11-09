@@ -43,7 +43,7 @@ export class HangmanComponent implements OnInit {
     this.winner = false;
     this.loser = false;
     this.gameover = false;
-    this.animals = ['dog', 'cat', 'fox', 'deer', 'elk', 'moose', 'racoon', 'chicken', 'horse', 'donkey'];
+    this.animals = ['dog', 'cat', 'fox', 'deer', 'elk', 'moose', 'raccoon', 'chicken', 'horse', 'donkey'];
     this.setupGame();
   }
 
