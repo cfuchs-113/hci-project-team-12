@@ -18,15 +18,6 @@ export class HangmanComponent implements OnInit {
   speechGuess: string;
   textGuess: string;
   verify: boolean;
-  word: string;
-  lives: number;
-  attempt: string;
-  lastGuess: string;
-  winner: boolean;
-  loser: boolean;
-  gameover: boolean;
-  animals: [string, string, string, string, string, string, string, string, string, string];
-
 
   constructor( private hangmanService: HangmanService, private cdr: ChangeDetectorRef ) {
     this.recording=false;
@@ -36,34 +27,6 @@ export class HangmanComponent implements OnInit {
     this.speechGuess = '';
     this.textGuess = '';
     this.verify = false;
-    this.word = '';
-    this.attempt = '';
-    this.lives = 10;
-    this.lastGuess = '';
-    this.winner = false;
-    this.loser = false;
-    this.gameover = false;
-    this.animals = ['dog', 'cat', 'fox', 'deer', 'elk', 'moose', 'raccoon', 'chicken', 'horse', 'donkey'];
-    this.setupGame();
-  }
-
-  setupGame() {
-    this.lives = 10;
-    this.winner = false;
-    this.loser = false;
-    this.gameover = false;
-    this.lastGuess = '';
-    this.word = this.animals[Math.random() * this.animals.length | 0];
-    console.log(this.word);
-    this.attempt = this.word;
-    for (let i = 0; i < this.word.length; i++) {
-      this.attempt = this.attempt.replace(this.word[i], '_');
-    }
-  }
-
-  onPlayAgain() {
-    this.setupGame();
-    this.cdr.detectChanges();
   }
 
   ngOnInit() {
@@ -72,7 +35,7 @@ export class HangmanComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     this.formatGuess(form.value.guess, this.checkbox, false);
-    this.handleGuess(this.textGuess);
+    this.hangmanService.handleGuess(this.textGuess);
   }
 
   onRecord() {
@@ -137,7 +100,7 @@ export class HangmanComponent implements OnInit {
 
   onVerified() {
     this.verify = false;
-    this.handleGuess(this.speechGuess);
+    this.hangmanService.handleGuess(this.speechGuess);
     this.cdr.detectChanges();
   }
 
@@ -172,41 +135,5 @@ export class HangmanComponent implements OnInit {
       console.log('Error: ', error);
     };
   };
-
-  handleGuess(guess: string) {
-    guess = guess.toLowerCase();
-    if (guess.length === 1) {
-      for (let i = 0; i < this.word.length; i++) {
-        if (this.word[i] === guess) {
-          this.attempt = this.attempt.substring(0, i) + guess + this.attempt.substring(i + 1);
-        }
-      }
-      let j = this.word.indexOf(guess);
-      if (j === -1) {
-        this.lives -= 1;
-        this.lastGuess = 'Incorrect!';
-      } else {
-        this.lastGuess = 'Correct!';
-      }
-      if (this.attempt === this.word) {
-        this.winner = true;
-        this.gameover = true;
-      }
-    } else {
-      if (guess === this.word) {
-        this.attempt = guess;
-        this.lastGuess = 'Correct!';
-        this.winner = true;
-        this.gameover = true;
-      } else {
-        this.lives -= 1;
-        this.lastGuess = "Incorrect!"
-      }
-    }
-    if (this.lives === 0) {
-      this.loser = true;
-      this.gameover = true;
-    }
-  }
 
 }
