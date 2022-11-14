@@ -11,11 +11,11 @@
           <div class="col-xs-12">
               <label class="radio-inline">
                 <input type="radio" name="option" value="text" checked="checked" [(ngModel)]="option">
-                Text
+                🔤Text
               </label>
               <label class="radio-inline px-lg-2">
                 <input class="py-lg-2" type="radio" name="option" value="speech" [(ngModel)]="option">
-                Speech
+                🎤 Speech
               </label>
           </div>
         </div>
@@ -27,10 +27,10 @@
               name="fullGuessCheckbox"
               [(ngModel)]="checkbox"
             >
-            <label class="px-lg-2" for="fullGuess">Guess the full word?</label>
+            <label class="px-lg-2" for="fullGuess">🤔 Guess the full word?</label>
           </div>
         </div>
-        <div class="row py-lg-2" *ngIf="option === 'text'">
+        <div class="row py-lg-2 bubble bubble-bottom-left" *ngIf="option === 'text'" contenteditable>
           <div class="col-xs-12">
             <div class="form-group">
               <label class="px-lg-2" for="guess">Guess:</label>
@@ -100,7 +100,7 @@
     <h6 *ngIf=!gameover>{{lastGuess}}</h6>
     <h4 *ngIf=winner>You won!</h4>
     <h4 *ngIf=loser>You lost!</h4>
-    <p>Lives: {{lives}}</p>
+    <p>Lives remaining: {{lives}}</p>
     <p>Word: {{attempt}}</p>
     <div class="container">
       <button (click)="onPlayAgain()" *ngIf=gameover>Play Again?</button>
