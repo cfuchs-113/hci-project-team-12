@@ -2,6 +2,8 @@
   <div class="row">
     <div class="col-md-12">
       <h1>Voice Recognition Hangman</h1>
+      <br>
+      <br>
     </div>
   </div>
   <div class="row" *ngIf="!gameover">
@@ -28,6 +30,8 @@
               [(ngModel)]="checkbox"
             >
             <label class="px-lg-2" for="fullGuess">🤔 Guess the full word?</label>
+            <br>
+            <br>
           </div>
         </div>
         <div class="row py-lg-2 bubble bubble-bottom-left" *ngIf="option === 'text'" contenteditable>
@@ -48,6 +52,8 @@
         </div>
         <div class="row py-lg-2" *ngIf="option === 'text'">
           <div class="col-xs-12">
+            <br>
+            <br>
             <button
               type="submit"
               class="btn btn-success"
